@@ -66,6 +66,7 @@ Postfixadmin:
 | **ROUNDCUBE_PORT** | Roundcube nginx listening port | *optional* | null
 | **POSTFIX_PORT** | Postfixadmin nginx listening port | *optional* | null
 | **PASS_CRYPT** | Passwords encryption method | *optional* | `SHA512-CRYPT`
+| **TZ** | Used to set php's date.timezone | *optional* | none
 
 
 ### Installation

@@ -1,9 +1,8 @@
 #!/bin/sh
 
-# Set attachment size and memory limit
-sed -i -e "s/<UPLOAD_MAX_SIZE>/$UPLOAD_MAX_SIZE/g" /nginx/conf/nginx.conf /php/etc/php-fpm.conf \
-       -e "s/<MEMORY_LIMIT>/$MEMORY_LIMIT/g" /php/etc/php-fpm.conf
-	   
+# <the lines I removed set the max upload size to 25M.
+#  Default seems to be 32, fine with that.>
+   
 # Check Required Variables.
 if [ -z ${ROUND_USER} ]; then
         echo "Roundcube MySQL Username not set!"
@@ -65,7 +64,7 @@ sed -i "/\$rcmail_config\['ifpl_use_auth_tokens'\]/c $PERS" /roundcube/plugins/p
 mv /roundcube/plugins/managesieve/config.inc.php.dist /roundcube/plugins/managesieve/config.inc.php
 export SIVPORT="\$config['managesieve_port'] = 4190;"
 export SIVHOST="\$config['managesieve_host'] = '${MAIL_HOST}';"
-export SIVTLS="\$config['managesieve_usetls'] = true;"
+export SIVTLS="\$config['managesieve_usetls'] = false;"
 sed -i "/\$config\['managesieve_port'\]/c $SIVPORT" /roundcube/plugins/managesieve/config.inc.php
 sed -i "/\$config\['managesieve_host'\]/c $SIVHOST" /roundcube/plugins/managesieve/config.inc.php
 sed -i "/\$config\['managesieve_usetls'\]/c $SIVTLS" /roundcube/plugins/managesieve/config.inc.php
@@ -78,7 +77,7 @@ if [ -z ${PASS_CRYPT} ]; then
 		echo "No Password encryption set, using SHA512-CRYPT by default."
 		export PASS_CRYPT_LC="sha512-crypt"
 		export PASS_CRYPT_UC="SHA512-CRYPT"
-		export ENCRYPTION="dovecot:SHA512-CRYPT"
+		export ENCRYPTION="php_crypt:SHA512::{SHA512-CRYPT}"
 else
 		echo "Using password encryption: ${PASS_CRYPT} "
 		export PASS_CRYPT_LC="sha512-crypt"
@@ -140,7 +139,9 @@ if [ ${ENABLE_SMTPS} == "true" ]; then
         echo "SMTPS Enabled, and Server Set!"
 elif [ ${ENABLE_SMTPS} == "false" ]; then
         export SMTP="\$config['smtp_server'] = '${MAIL_HOST}';"
+        export SMTPSPRT="\$config['smtp_port'] = 25;"
         sed -i "/\$config\['smtp_server'\]/c $SMTP" /roundcube/config/config.inc.php
+        sed -i "/\$config\['smtp_port'\]/c $SMTPSPRT" /roundcube/config/config.inc.php
         echo "SMTPS Disabled, and Server Set!"
 fi
 
@@ -160,8 +161,6 @@ echo "Password plugin Configured."
 export GPGHOME="\$config['enigma_pgp_homedir'] = '/enigma';"
 sed -i "/\$config\['enigma_pgp_homedir'\]/c $GPGHOME" /roundcube/plugins/enigma/config.inc.php
 
-# Fix permissions
-chown -R $UID:$GID /roundcube /etc/s6.d /nginx /php /var/log /enigma /postfixadmin
 
 # Configure Listening Ports if changed.
 if [ -z ${POSTFIX_PORT} ]; then
@@ -178,6 +177,10 @@ else
 	sed -i "s/8888/${ROUNDCUBE_PORT}/g" /nginx/sites-enabled/roundcube.conf
 	echo "Roundcube WebGUI Port configured!"
 fi
+
+mkdir -p /run/nginx /postfixadmin/templates_c /roundcube/temp /roundcube/logs && \
+	chown -R nginx.nginx /run/nginx && \
+	chown -R nobody.nobody /postfixadmin/templates_c /roundcube/temp /roundcube/logs
 
 # Local postfixadmin configuration file
 cat > /postfixadmin/config.local.php <<EOF
@@ -213,10 +216,14 @@ cat > /postfixadmin/config.local.php <<EOF
 \$CONF['mailboxes'] = '0';
 \$CONF['maxquota'] = '0';
 \$CONF['domain_quota_default'] = '500';
-?>
 EOF
 
-echo "Server is now started."
-echo "Roundcube is listening on port: ${ROUNDCUBE_PORT} & Postfixadmin is listening on port: ${POSTFIX_PORT}"
-# RUN !
-exec su-exec $UID:$GID /bin/s6-svscan /etc/s6.d
+if [ ! -z "${PFADMIN_SETUP_PASS}" ]; then
+	echo "\$CONF['setup_password'] = '${PFADMIN_SETUP_PASS}';" >> /postfixadmin/config.local.php
+fi
+
+if [ ! -z "${TZ}" ]; then
+	echo "php_admin_value[date.timezone] = ${TZ}" >> /etc/php7/php-fpm.d/www.conf
+fi
+
+exec supervisord -c /etc/supervisord.conf
