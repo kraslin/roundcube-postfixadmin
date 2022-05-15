@@ -102,8 +102,8 @@ RUN sed -r -i /etc/php7/php-fpm.d/www.conf \
 RUN rm -rf /tmp/* /var/cache/apk/* /root/.gnupg
 
 #
-# Port 8080 =
-# Port 8888 = 
+# Port 8080 = Postfix Admin
+# Port 8888 = Roundcube
 #
 EXPOSE 8888 8080
 

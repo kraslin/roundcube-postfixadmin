@@ -1,0 +1,29 @@
+version: "3.3"
+
+services:
+        rcpfxadm:
+                restart: always
+                image: docker.krasl.in/roundcube/roundcube:latest
+                networks:
+                        - public
+                env_file: /srv/containers/roundcube/env
+                labels:
+                        - "traefik.enable=true"
+                        - "traefik.http.routers.roundcube.entryPoints=https"
+                        - "traefik.http.routers.roundcube.tls=true"
+                        - "traefik.http.routers.roundcube.rule=Host(`mail.apps`) || Host(`mail.apps.krasl.in`)"
+                        - "traefik.http.routers.roundcube.service=svc_roundcube"
+                        - "traefik.http.services.svc_roundcube.loadbalancer.server.port=8888"
+                        - "traefik.http.routers.pfxadm.entryPoints=https"
+                        - "traefik.http.routers.pfxadm.tls=true"
+                        - "traefik.http.routers.pfxadm.rule=Host(`pfxadm.apps`) || Host(`pfxadm.apps.krasl.in`)"
+                        - "traefik.http.routers.pfxadm.service=svc_pfxadm"
+                        - "traefik.http.services.svc_pfxadm.loadbalancer.server.port=8080"
+                logging:
+                        driver: loki
+                        options:
+                                loki-url: http://10.0.0.1:3100/loki/api/v1/push
+
+networks:
+        public:
+                external: true

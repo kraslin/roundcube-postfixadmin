@@ -167,14 +167,14 @@ if [ -z ${POSTFIX_PORT} ]; then
 	echo "Postfix WebGUI Port not Specified, using default of 8080."
 else
 	echo "Postfix WebGUI Port Specified as ${POSTFIX_PORT}, configuring as such."
-	sed -i "s/8080/${POSTFIX_PORT}/g" /nginx/sites-enabled/postfixadmin.conf
+	sed -i "s/8080/${POSTFIX_PORT}/g" /etc/nginx/conf.d/postfixadmin.conf
 	echo "Postfix WebGUI Port configured!"
 fi
 if [ -z ${ROUNDCUBE_PORT} ]; then
 	echo "Roundcube WebGUI Port not Specified, using default of 8888."
 else
 	echo "Roundcube WebGUI Port Specified as ${ROUNDCUBE_PORT}, configuring as such."
-	sed -i "s/8888/${ROUNDCUBE_PORT}/g" /nginx/sites-enabled/roundcube.conf
+	sed -i "s/8888/${ROUNDCUBE_PORT}/g" /etc/nginx/conf.d/roundcube.conf
 	echo "Roundcube WebGUI Port configured!"
 fi
 
