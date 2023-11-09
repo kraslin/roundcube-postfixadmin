@@ -6,8 +6,8 @@ LABEL description "Roundcube-Postfix is a simple, modern & fast webmail client c
 #
 # Arguments and which Roundcube plugins we'll need
 #
-ARG ROUND_VERSION=1.5.2
-ARG POST_VERSION=3.3.11
+ARG ROUND_VERSION=1.5.6
+ARG POST_VERSION=3.3.13
 ENV PLUGINS="'archive', 'zipdownload', 'password','enigma','emoticons','filesystem_attachments','managesieve','identity_smtp','calendar','contextmenu','markasjunk2','tasklist','persistent_login'"
 
 #
