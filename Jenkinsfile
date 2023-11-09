@@ -8,7 +8,6 @@ pipeline {
         string(name:'RepoCredentials', defaultValue: params.RepoCredentials ?:'', description: 'Repository credentials')
         booleanParam(name:'PushImage', defaultValue: params.PushImage ?:true, description: 'Push the image after building')
         booleanParam(name:'TagLatest', defaultValue: params.TagLatest ?:true, description: 'Tag the image as latest')
-        string(name:'ComposeAgent', defaultValue: params.ComposeAgent ?:'cornerstone', description: 'The agent on which to run docker-compose')
     }
 
     agent any;
@@ -34,17 +33,6 @@ pipeline {
                         }
                     }
                 }
-            }
-        }
-
-        stage('Compose') {
-            when {
-                beforeAgent true
-		expression { return params.ComposeAgent != "" }
-            }
-            agent { label "${params.ComposeAgent}" }
-            steps {
-                sh("docker-compose up -d")
             }
         }
     }
