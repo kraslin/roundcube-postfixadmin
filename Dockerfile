@@ -15,11 +15,11 @@ ENV PLUGINS="'archive', 'zipdownload', 'password','enigma','emoticons','filesyst
 #
 RUN apk update && apk upgrade && \
 	apk add nginx gnupg tini composer git su-exec supervisor \
-	php7-bz2 php7-calendar php7-common php7-ctype php7-curl \
-	php7-exif php7-fileinfo php7-fpm php7-gd php7-gettext php7-iconv php7-pecl-imagick php7-imap \
-	php7-intl php7-json php7-ldap php7-mbstring php7-mysqli php7-openssl \
-	php7-pdo php7-pdo_mysql php7-pear php7-pspell php7-session \
-	php7-simplexml php7-sockets php7-tokenizer php7-xsl php7-zip php7-mcrypt
+	php83-bz2 php83-calendar php83-common php83-ctype php83-curl \
+	php83-exif php83-fileinfo php83-fpm php83-gd php83-gettext php83-iconv php83-pecl-imagick php83-imap \
+	php83-intl php83-json php83-ldap php83-mbstring php83-mysqli php83-openssl \
+	php83-pdo php83-pdo_mysql php83-pear php83-pspell php83-session php83-xmlwriter \
+	php83-simplexml php83-sockets php83-tokenizer php83-xsl php83-zip php83-pecl-mcrypt
 
 #
 # Things we need to download
@@ -89,9 +89,9 @@ VOLUME /enigma
 COPY rootfs /
 #COPY mysql.initial.sql /roundcube/SQL
 
-RUN mkdir /run/nginx && chown nginx.nginx /run/nginx
+RUN mkdir -p /run/nginx && chown nginx.nginx /run/nginx
 
-RUN sed -r -i /etc/php7/php-fpm.d/www.conf \
+RUN sed -r -i /etc/php83/php-fpm.d/www.conf \
 	-e 's@(listen\s*=\s*).+$@\1/var/run/php-fpm.sock@' \
 	-e 's@;?(listen.mode\s*=\s*).+$@\10666@' \
 	-e 's@;?(listen.acl_users\s*=\s*).+$@\1nginx@'
@@ -108,3 +108,6 @@ RUN rm -rf /tmp/* /var/cache/apk/* /root/.gnupg
 EXPOSE 8888 8080
 
 CMD ["tini", "--", "/run.sh"]
+
+LABEL PostfixAdminVersion="${POST_VERSION}"
+LABEL RoundCubeVersion="${ROUND_VERSION}"

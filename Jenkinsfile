@@ -8,6 +8,8 @@ pipeline {
         string(name:'RepoCredentials', defaultValue: params.RepoCredentials ?:'', description: 'Repository credentials')
         booleanParam(name:'PushImage', defaultValue: params.PushImage ?:true, description: 'Push the image after building')
         booleanParam(name:'TagLatest', defaultValue: params.TagLatest ?:true, description: 'Tag the image as latest')
+	string(name:'PostfixAdminVersion', defaultValue: params.PostfixAdminVersion ?:'3.3.13')
+	string(name:'RoundCubeVersion', defaultValue: params.RoudCubeVersion ?:'1.6.7')
     }
 
     agent any;
@@ -15,7 +17,7 @@ pipeline {
         stage('Build Image') {
             steps {
                 script {
-                    dockerImage = docker.build("${params.DockerImageName}:${env.BUILD_NUMBER}")
+                    dockerImage = docker.build("${params.DockerImageName}:${env.BUILD_NUMBER}", "--build-arg ROUND_VERSION=${params.RoundCubeVersion} --build-arg POST_VERSION=${params.PostfixAdminVersion} -f Dockerfile .")
                 }
             }
         }
