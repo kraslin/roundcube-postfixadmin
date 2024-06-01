@@ -17,7 +17,7 @@ pipeline {
         stage('Build Image') {
             steps {
                 script {
-                    dockerImage = docker.build("${params.DockerImageName}:${env.BUILD_NUMBER}", "--build-arg ROUND_VERSION=${params.RoundCubeVersion} --build-arg POST_VERSION=${params.PostfixAdminVersion} -f Dockerfile .")
+                    dockerImage = docker.build("${params.DockerImageName}:${env.BUILD_NUMBER}", "--pull --build-arg ROUND_VERSION=${params.RoundCubeVersion} --build-arg POST_VERSION=${params.PostfixAdminVersion} -f Dockerfile .")
                 }
             }
         }
