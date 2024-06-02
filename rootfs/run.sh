@@ -223,7 +223,7 @@ if [ ! -z "${PFADMIN_SETUP_PASS}" ]; then
 fi
 
 if [ ! -z "${TZ}" ]; then
-	echo "php_admin_value[date.timezone] = ${TZ}" >> /etc/php7/php-fpm.d/www.conf
+	echo "php_admin_value[date.timezone] = ${TZ}" >> /etc/php83/php-fpm.d/www.conf
 fi
 
 exec supervisord -c /etc/supervisord.conf
