@@ -121,14 +121,8 @@ if [ ${ENABLE_IMAPS} == "true" ]; then
 		fi
         echo "IMAPS Enabled, and Server Set!"
 elif [ ${ENABLE_IMAPS} == "false" ]; then
-        export IMAP="\$config['default_host'] = '${MAIL_HOST}';"
-        sed -i "/\$config\['default_host'\]/c $IMAP" /roundcube/config/config.inc.php
-        export PRT="\$config['default_port'] = 143;"
-		if grep -q "143" /roundcube/config/config.inc.php; then
-				echo "Default Port already Set!"
-		else
-				sed -i "/ssl:\/\/${MAIL_HOST}/a $PRT" /roundcube/config/config.inc.php
-		fi
+        export IMAP="\$config['imap_host'] = '${MAIL_HOST}:143';"
+        sed -i "/\$config\['imap_host'\]/c $IMAP" /roundcube/config/config.inc.php
         echo "IMAPS Disabled, and Server Set!"
 fi
 if [ ${ENABLE_SMTPS} == "true" ]; then
@@ -138,10 +132,8 @@ if [ ${ENABLE_SMTPS} == "true" ]; then
         sed -i "/\$config\['smtp_port'\]/c $SMTPSPRT" /roundcube/config/config.inc.php
         echo "SMTPS Enabled, and Server Set!"
 elif [ ${ENABLE_SMTPS} == "false" ]; then
-        export SMTP="\$config['smtp_server'] = '${MAIL_HOST}';"
-        export SMTPSPRT="\$config['smtp_port'] = 25;"
-        sed -i "/\$config\['smtp_server'\]/c $SMTP" /roundcube/config/config.inc.php
-        sed -i "/\$config\['smtp_port'\]/c $SMTPSPRT" /roundcube/config/config.inc.php
+        export SMTP="\$config['smtp_host'] = '${MAIL_HOST}:25';"
+        sed -i "/\$config\['smtp_host'\]/c $SMTP" /roundcube/config/config.inc.php
         echo "SMTPS Disabled, and Server Set!"
 fi
 
