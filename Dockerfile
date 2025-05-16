@@ -26,8 +26,7 @@ RUN apk update && apk upgrade && \
 #
 RUN cd /tmp && \
 	wget https://github.com/roundcube/roundcubemail/releases/download/${ROUND_VERSION}/roundcubemail-${ROUND_VERSION}-complete.tar.gz && \
-	wget https://github.com/postfixadmin/postfixadmin/archive/refs/tags/postfixadmin-${POST_VERSION}.tar.gz && \
-	git clone https://git.kolab.org/diffusion/RPK/roundcubemail-plugins-kolab.git
+	wget https://github.com/postfixadmin/postfixadmin/archive/refs/tags/postfixadmin-${POST_VERSION}.tar.gz
 
 #
 # Postfix Admin
@@ -49,9 +48,6 @@ RUN mkdir /roundcube && tar -xzf /tmp/roundcubemail-${ROUND_VERSION}-complete.ta
 #
 RUN cd /roundcube/plugins && \
 	git clone https://github.com/elm/Roundcube-SMTP-per-Identity-Plugin.git identity_smtp && \
-	cp -r /tmp/roundcubemail-plugins-kolab/plugins/calendar . && \
-	cp -r /tmp/roundcubemail-plugins-kolab/plugins/libcalendaring . && \
-	cp -r /tmp/roundcubemail-plugins-kolab/plugins/tasklist . && \
 	git clone https://github.com/JohnDoh/Roundcube-Plugin-Context-Menu.git contextmenu && \
 	git clone https://github.com/JohnDoh/Roundcube-Plugin-Mark-as-Junk-2.git markasjunk2 && \
 	git clone https://github.com/mfreiholz/persistent_login.git persistent_login
