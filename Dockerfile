@@ -84,7 +84,7 @@ VOLUME /enigma
 COPY rootfs /
 #COPY mysql.initial.sql /roundcube/SQL
 
-RUN mkdir -p /run/nginx && chown nginx.nginx /run/nginx
+RUN mkdir -p /run/nginx && chown nginx:nginx /run/nginx
 
 RUN sed -r -i /etc/php83/php-fpm.d/www.conf \
 	-e 's@(listen\s*=\s*).+$@\1/var/run/php-fpm.sock@' \
