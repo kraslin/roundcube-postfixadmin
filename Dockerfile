@@ -8,7 +8,7 @@ LABEL description "Roundcube-Postfix is a simple, modern & fast webmail client c
 #
 ARG ROUND_VERSION=1.5.6
 ARG POST_VERSION=3.3.13
-ENV PLUGINS="'archive', 'zipdownload', 'password','enigma','emoticons','filesystem_attachments','managesieve','identity_smtp','calendar','contextmenu','markasjunk2','tasklist','persistent_login'"
+ENV PLUGINS="'archive', 'zipdownload', 'password','enigma','emoticons','filesystem_attachments','managesieve','identity_smtp','calendar','contextmenu','markasjunk2','persistent_login'"
 
 #
 # Replace custom nginx-php base image
@@ -57,7 +57,6 @@ RUN cd /roundcube/plugins && \
 #
 RUN mv /roundcube/plugins/password/config.inc.php.dist /roundcube/plugins/password/config.inc.php && \
 	mv /roundcube/plugins/enigma/config.inc.php.dist /roundcube/plugins/enigma/config.inc.php && \
-	mv /roundcube/plugins/tasklist/config.inc.php.dist /roundcube/plugins/tasklist/config.inc.php && \
 	mv /roundcube/plugins/persistent_login/config.inc.php.dist /roundcube/plugins/persistent_login/config.inc.php
 
 #
