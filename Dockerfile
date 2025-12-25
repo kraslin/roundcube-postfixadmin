@@ -7,7 +7,7 @@ LABEL description "Roundcube-Postfix is a simple, modern & fast webmail client c
 # Arguments and which Roundcube plugins we'll need
 #
 ARG ROUND_VERSION=1.5.6
-ARG POST_VERSION=3.3.13
+ARG POST_VERSION=v4.0.1
 ENV PLUGINS="'archive', 'zipdownload', 'password','enigma','emoticons','filesystem_attachments','managesieve','identity_smtp','calendar','contextmenu','markasjunk2','persistent_login'"
 
 #
@@ -26,7 +26,7 @@ RUN apk update && apk upgrade && \
 #
 RUN cd /tmp && \
 	wget https://github.com/roundcube/roundcubemail/releases/download/${ROUND_VERSION}/roundcubemail-${ROUND_VERSION}-complete.tar.gz && \
-	wget https://github.com/postfixadmin/postfixadmin/archive/refs/tags/v${POST_VERSION}.tar.gz
+	wget https://github.com/postfixadmin/postfixadmin/archive/refs/tags/${POST_VERSION}.tar.gz
 
 #
 # Postfix Admin
