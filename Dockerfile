@@ -31,7 +31,7 @@ RUN cd /tmp && \
 #
 # Postfix Admin
 #
-RUN mkdir /postfixadmin && tar xvf /tmp/v${POST_VERSION}.tar.gz -C /postfixadmin && \
+RUN mkdir /postfixadmin && tar xvf /tmp/${POST_VERSION}.tar.gz -C /postfixadmin && \
 	mv /postfixadmin/postfixadmin-${POST_VERSION}/* /postfixadmin && \
 	rm -rf /postfixadmin/postfixadmin-${POST_VERSION}
 
