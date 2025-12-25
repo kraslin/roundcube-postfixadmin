@@ -26,14 +26,14 @@ RUN apk update && apk upgrade && \
 #
 RUN cd /tmp && \
 	wget https://github.com/roundcube/roundcubemail/releases/download/${ROUND_VERSION}/roundcubemail-${ROUND_VERSION}-complete.tar.gz && \
-	wget https://github.com/postfixadmin/postfixadmin/archive/refs/tags/postfixadmin-${POST_VERSION}.tar.gz
+	wget https://github.com/postfixadmin/postfixadmin/archive/refs/tags/v${POST_VERSION}.tar.gz
 
 #
 # Postfix Admin
 #
-RUN mkdir /postfixadmin && tar xvf /tmp/postfixadmin-${POST_VERSION}.tar.gz -C /postfixadmin && \
-	mv /postfixadmin/postfixadmin-postfixadmin-${POST_VERSION}/* /postfixadmin && \
-	rm -rf /postfixadmin/postfixadmin-postfixadmin-${POST_VERSION}
+RUN mkdir /postfixadmin && tar xvf /tmp/v${POST_VERSION}.tar.gz -C /postfixadmin && \
+	mv /postfixadmin/postfixadmin-${POST_VERSION}/* /postfixadmin && \
+	rm -rf /postfixadmin/postfixadmin-${POST_VERSION}
 
 #
 # Roundcube
